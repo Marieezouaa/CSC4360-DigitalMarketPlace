@@ -1,3 +1,4 @@
+import 'package:digitalmarketplace/pages/login_logout_pages/login_screen.dart';
 import 'package:digitalmarketplace/pages/onboarding_pages/page1.dart';
 import 'package:digitalmarketplace/pages/onboarding_pages/page2.dart';
 import 'package:digitalmarketplace/pages/onboarding_pages/page3.dart';
@@ -52,15 +53,47 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   controller: _controller,
                   count: 3,
                   effect: const JumpingDotEffect(
-                      dotColor: Color.fromARGB(255,53, 45, 57),
+                      dotColor: Color.fromARGB(255, 53, 45, 57),
                       activeDotColor: Color.fromARGB(255, 109, 67, 90)),
                 ),
                 GestureDetector(
                   onTap: () {
-                    _controller.nextPage(
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeIn,
-                    );
+                    onfirstPage
+                        ? _controller.nextPage(
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.easeIn,
+                          )
+                        : onSecondPage
+                            ? _controller.nextPage(
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeIn,
+                              )
+                            : onThirdPage
+                                ? Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          const LoginScreen(),
+                                      transitionDuration: Duration.zero,
+                                      reverseTransitionDuration: Duration.zero,
+                                    ),
+                                  )
+                                : Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          const LoginScreen(),
+                                      transitionDuration: Duration.zero,
+                                      reverseTransitionDuration: Duration.zero,
+                                    ),
+                                  );
+
+                    // _controller.nextPage(
+                    //   duration: const Duration(milliseconds: 500),
+                    //   curve: Curves.easeIn,
+                    // );
                   },
                   child: Container(
                     width: 50,

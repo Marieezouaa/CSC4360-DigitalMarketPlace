@@ -17,12 +17,9 @@ class Page1 extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-             
-             
-        Image(
+              Image(
                   image: AssetImage(
                       "assets/images/onboarding_images/welcomescreen.png")),
-              
             ],
           ),
         ),

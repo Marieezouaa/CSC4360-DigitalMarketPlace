@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "749771525807",
+    "project_id": "csc4360-digitalmarketplace",
+    "storage_bucket": "csc4360-digitalmarketplace.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749771525807:android:77e1ff633a15f943798e5a",
+        "android_client_info": {
+          "package_name": "com.example.digitalmarketplace"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlmcWHi-N-jby-sJWDK2Ok-D3TU9mSLtI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

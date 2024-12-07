@@ -16,13 +16,9 @@ class Page2 extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                height: 400, // Provide a specific height
-                width: double.infinity, // Use full width
-                child: PDFView(
-                  filePath: 'assets/images/onboarding_images/secondscreen.pdf',
-                ),
-              )
+              Image(
+                  image: AssetImage(
+                      "assets/images/onboarding_images/secondscreen.png")),
             ],
           ),
         ),
