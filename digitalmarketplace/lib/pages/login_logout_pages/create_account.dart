@@ -1,3 +1,4 @@
+import 'package:digitalmarketplace/pages/intro_screens/setup_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,7 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:digitalmarketplace/pages/login_logout_pages/login_screen.dart';
 import 'package:digitalmarketplace/models/input_feild.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:digitalmarketplace/pages/home_screen.dart';
+import 'package:digitalmarketplace/pages/app_screens/home_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -122,68 +123,65 @@ Future<void> _initializeNewUser(User? user) async {
   }
 
   Future<void> signUp() async {
-    // Ensure passwords match
-    if (passwordController.text.trim() !=
-        confirmPasswordController.text.trim()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Passwords do not match")),
-      );
-      return;
-    }
-
-    // Attempt to create the user account
-    try {
-      // Create user with email and password
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-
-      // Save additional user data (first name and last name) to Firestore
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userCredential.user!.uid)
-          .set({
-        'firstName': firstNameController.text.trim(),
-        'lastName': lastNameController.text.trim(),
-        'email': emailController.text.trim(),
-      });
-
-      // Display success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Account created successfully!")),
-      );
-
-      // Navigate to HomeScreen and pass the user's first name
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ),
-      );
-    } on FirebaseAuthException catch (e) {
-      // Display specific error messages based on the FirebaseAuth error code
-      String errorMessage;
-      if (e.code == 'weak-password') {
-        errorMessage = 'The password provided is too weak.';
-      } else if (e.code == 'email-already-in-use') {
-        errorMessage = 'The account already exists for that email.';
-      } else {
-        errorMessage = 'An unknown error occurred. Please try again.';
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
-      );
-    } catch (e) {
-      // Generic error handling in case of an unexpected error
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text("Failed to create account. Please try again.")),
-      );
-    }
+  // Ensure passwords match
+  if (passwordController.text.trim() !=
+      confirmPasswordController.text.trim()) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Passwords do not match")),
+    );
+    return;
   }
+
+  try {
+    // Create user with email and password
+    UserCredential userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
+
+    // Save additional user data to Firestore
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userCredential.user!.uid)
+        .set({
+      'firstName': firstNameController.text.trim(),
+      'lastName': lastNameController.text.trim(),
+      'email': emailController.text.trim(),
+    });
+
+    // Display success message
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Account created successfully!")),
+    );
+
+    // Navigate to the SetupScreen instead of HomeScreen
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SetupScreen(),
+      ),
+    );
+  } on FirebaseAuthException catch (e) {
+    String errorMessage;
+    if (e.code == 'weak-password') {
+      errorMessage = 'The password provided is too weak.';
+    } else if (e.code == 'email-already-in-use') {
+      errorMessage = 'The account already exists for that email.';
+    } else {
+      errorMessage = 'An unknown error occurred. Please try again.';
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(errorMessage)),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          content: Text("Failed to create account. Please try again.")),
+    );
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -211,7 +209,7 @@ Future<void> _initializeNewUser(User? user) async {
                     children: [
                       Text(
                         "Create Account",
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.spicyRice(
                           fontSize: 32,
                           fontWeight: FontWeight.w400,
                           color: onSurfaceColor,
@@ -299,27 +297,27 @@ Future<void> _initializeNewUser(User? user) async {
                     },
                     child: Text(
                       "Create Account",
-                      style: GoogleFonts.montserrat(
+                      style: GoogleFonts.spicyRice(
                           fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                   ),
                   const SizedBox(height: 40),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       //code by marieezouaa
-                      Expanded(
+                      const Expanded(
                         child: Divider(color: Colors.grey, thickness: 1),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
                         child: Text(
                           'Or Sign Up with',
-                          style: TextStyle(
+                        style: GoogleFonts.spicyRice(
                               color: Color.fromARGB(255, 137, 136, 136)),
                         ),
                       ),
-                      Expanded(
+                      const Expanded(
                         child: Divider(color: Colors.grey, thickness: 1),
                       ),
                     ],
@@ -345,8 +343,8 @@ Future<void> _initializeNewUser(User? user) async {
                           height: 24.0,
                         ),
                         const SizedBox(width: 10.0),
-                        const Text("Sign up with Google",
-                            style: TextStyle(fontSize: 16.0)),
+                     Text("Sign up with Google",
+                            style: GoogleFonts.spicyRice(fontSize: 16.0)),
                       ],
                     ),
                   ),
@@ -371,8 +369,8 @@ Future<void> _initializeNewUser(User? user) async {
                           height: 24.0,
                         ),
                         const SizedBox(width: 10.0),
-                        const Text("Sign up with Apple",
-                            style: TextStyle(fontSize: 16.0)),
+                         Text("Sign up with Apple",
+                           style: GoogleFonts.spicyRice(fontSize: 16.0)),
                       ],
                     ),
                   ),
@@ -382,7 +380,7 @@ Future<void> _initializeNewUser(User? user) async {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text("Already have an account?"),
+                         Text("Already have an account?",  style: GoogleFonts.spicyRice(),),
                         TextButton(
                           onPressed: () {
                             Navigator.push(
@@ -400,7 +398,7 @@ Future<void> _initializeNewUser(User? user) async {
                             padding: EdgeInsets.zero,
                             minimumSize: const Size(0, 0),
                           ),
-                          child: const Text("Login"),
+                          child: Text("Login", style: GoogleFonts.spicyRice()),
                         ),
                       ],
                     ),

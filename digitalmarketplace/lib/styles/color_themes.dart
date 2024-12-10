@@ -45,7 +45,7 @@ class GlobalThemeData {
     Light Brown: Color(0xffD6A97A)
     White: Color(0xffFFFFFF)
     */
-    tertiary:  Color.fromARGB(255, 162, 161, 131),
+    tertiary:  Color.fromARGB(255, 175, 126, 70),
     onTertiary: Colors.white,
 
     /*
@@ -84,7 +84,7 @@ class GlobalThemeData {
     Light Brown: Color(0xffD6A97A)
     White: Color(0xffFFFFFF)
     */
-    tertiary: Color.fromARGB(255, 162, 161, 131),
+    tertiary:Color.fromARGB(255, 175, 126, 70),
     onTertiary: Colors.white,
 
     /*

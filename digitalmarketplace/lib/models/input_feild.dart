@@ -24,7 +24,7 @@ class InputFeild extends StatelessWidget {
         filled: true, // Fills the background with a color
         fillColor: secondaryColor, // Light grey background color
         hintText: hintTextString,
-        hintStyle: GoogleFonts.montserrat(
+        hintStyle: GoogleFonts.spicyRice(
           color: onSecondaryColor,
           fontSize: 16,
         ),
