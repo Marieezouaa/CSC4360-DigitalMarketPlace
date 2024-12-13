@@ -1,30 +1,28 @@
+import 'package:digitalmarketplace/models/product_details.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:carousel_slider/carousel_slider.dart'; // Add the carousel_slider package
 
 class ProductCard extends StatelessWidget {
-  final String productId;
-  final String productName;
-  final double productPrice;
-  final List<String> imagePaths;
-  final Color secondaryColor;
-  final String collection;
+  final Map<String, dynamic> artwork;
+  final List<String> imagePaths; // Accept imagePaths
 
   const ProductCard({
-    super.key,
-    required this.productId,
-    required this.productName,
-    required this.productPrice,
-    required this.imagePaths,
-    required this.secondaryColor,
-    required this.collection,
-  });
+    required this.artwork,
+    required this.imagePaths, // Accept imagePaths
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to Product Details screen (you can define this screen later)
+        // Handle navigation to product details screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetails(artwork: artwork),
+          ),
+        );
       },
       child: Container(
         width: 190,
@@ -37,16 +35,16 @@ class ProductCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(25),
           child: Stack(
             children: [
-              // Background Image
+              // Carousel for local images
               Positioned.fill(
                 child: imagePaths.isNotEmpty
-                    ? Image.network(
-                        imagePaths.first,
+                    ? Image.asset(
+                        imagePaths.isNotEmpty ? imagePaths[0] : '', // Display the first image (you could add a carousel if needed)
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: double.infinity,
                       )
-                    : Container(), // Placeholder in case imagePaths is empty
+                    : const Center(child: CircularProgressIndicator()),
               ),
               // Product Details
               Positioned(
@@ -55,8 +53,8 @@ class ProductCard extends StatelessWidget {
                 right: 0,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: secondaryColor,
-                    borderRadius: const BorderRadius.only(
+                    color: Color.fromARGB(183, 123, 111, 111),
+                    borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(25),
                       bottomRight: Radius.circular(25),
                     ),
@@ -66,8 +64,9 @@ class ProductCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        productName,
+                        artwork['title'] ?? 'Unnamed Product',
                         style: GoogleFonts.montserrat(
+                          color: Colors.white,
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
                         ),
@@ -75,8 +74,9 @@ class ProductCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        "\$${productPrice}",
+                        "\$${artwork['price']?.toStringAsFixed(2) ?? '0.00'}",
                         style: GoogleFonts.gabarito(
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),

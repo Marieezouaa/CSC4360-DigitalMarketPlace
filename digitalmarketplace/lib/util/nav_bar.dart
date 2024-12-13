@@ -90,15 +90,31 @@ class _NavBarState extends State<NavBar> {
         activeColorPrimary: CupertinoColors.activeBlue,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
-      PersistentBottomNavBarItem(
-        icon: HugeIcon(
-          icon: HugeIcons.strokeRoundedAdd01,
-          color: _iconColors[2], // Dynamically set color
-          size: 27.0,
-        ),
-        activeColorPrimary: CupertinoColors.activeBlue,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
+     PersistentBottomNavBarItem(
+  icon: Container(
+    decoration: const BoxDecoration(
+      gradient: const LinearGradient(
+        colors: [
+          Color(0xFF614CAF), // Start color
+          Color(0xFF9D6CFF), // Middle color
+          Color(0xFFFFA726), // End color
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
       ),
+      shape: BoxShape.circle,
+    ),
+    padding: const EdgeInsets.all(8.0),
+    child: const HugeIcon(
+      icon: HugeIcons.strokeRoundedAdd01,
+      color: CupertinoColors.white,
+      size: 27.0,
+    ),
+  ),
+  activeColorPrimary: Colors.transparent, // Prevent additional coloring
+  inactiveColorPrimary: Colors.transparent,
+),
+
       PersistentBottomNavBarItem(
         icon: HugeIcon(
           icon: HugeIcons.strokeRoundedNotification02,

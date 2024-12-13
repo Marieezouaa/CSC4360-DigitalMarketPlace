@@ -29,7 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: surfaceColor,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(top: 60.0, bottom: 8, left: 8, right: 8),
           child: Align(
             alignment: Alignment.center,
             child: Column(
