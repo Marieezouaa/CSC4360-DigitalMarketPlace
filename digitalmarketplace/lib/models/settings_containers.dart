@@ -29,7 +29,7 @@ class SettingsContainers extends StatelessWidget {
           width: 385,
           height: 65,
           decoration: BoxDecoration(
-              color: secondaryColor, borderRadius: BorderRadius.circular(8)),
+              color: const Color.fromARGB(255, 190, 169, 227), borderRadius: BorderRadius.circular(8)),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(

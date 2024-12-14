@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class TrendingBanner extends StatelessWidget {
+class TrendingBanner extends StatefulWidget {
   final String title;
   final String imagePath;
-
+  
   const TrendingBanner({
     super.key,
     required this.title,
@@ -12,42 +12,59 @@ class TrendingBanner extends StatelessWidget {
   });
 
   @override
+  _TrendingBannerState createState() => _TrendingBannerState();
+}
+
+class _TrendingBannerState extends State<TrendingBanner> with AutomaticKeepAliveClientMixin {
+  // Add any state variables you want to persist here
+  bool _isLiked = false;
+  
+  @override
+  bool get wantKeepAlive => true; // This ensures the widget's state is preserved
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context); // Required for AutomaticKeepAliveClientMixin
+    
     return Container(
-      // Keep original dimensions
       width: 400,
       height: 120,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
         image: DecorationImage(
-          image: AssetImage(imagePath),
-          fit: BoxFit.cover, // Ensure the image covers the container
+          image: AssetImage(widget.imagePath),
+          fit: BoxFit.cover,
         ),
       ),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            colors: [
-              Colors.black.withOpacity(0.5),
-              Colors.transparent,
-            ],
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-          ),
-        ),
-        child: Align(
-          alignment: Alignment.bottomLeft,
-          child: Text(
-            title,
-            style: GoogleFonts.spicyRice(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+      child: Stack(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              gradient: LinearGradient(
+                colors: [
+                  Colors.black.withOpacity(0.5),
+                  Colors.transparent,
+                ],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+              ),
+            ),
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Text(
+                widget.title,
+                style: GoogleFonts.spicyRice(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
-        ),
+          
+        ],
       ),
     );
   }

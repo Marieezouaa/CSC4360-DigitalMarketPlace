@@ -22,10 +22,10 @@ class InputFeild extends StatelessWidget {
       obscureText: makeTextInvisible,
       decoration: InputDecoration(
         filled: true, // Fills the background with a color
-        fillColor: secondaryColor, // Light grey background color
+        fillColor: Color.fromARGB(255, 244, 244, 244), // Light grey background color
         hintText: hintTextString,
         hintStyle: GoogleFonts.spicyRice(
-          color: onSecondaryColor,
+          color: Colors.black,
           fontSize: 16,
         ),
         border: const OutlineInputBorder(

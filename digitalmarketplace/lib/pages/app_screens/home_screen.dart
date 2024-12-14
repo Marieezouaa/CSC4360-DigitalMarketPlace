@@ -26,9 +26,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Dummy image list for demonstration purposes
   final List<ImagesList> images = [
-    ImagesList("Artwork 1", ["assets/images/art1_1.jpg", "assets/images/art1_2.jpg"]),
-    ImagesList("Artwork 2", ["assets/images/art2_1.jpg"]),
-    ImagesList("Artwork 3", ["assets/images/art3_1.jpg", "assets/images/art3_2.jpg"]),
+    ImagesList(
+        "Whispers of the Forest", ["assets/images/filler_images/Nature.png"]),
+    ImagesList("Urban Rhythms", ["assets/images/filler_images/Abstract.png"]),
+    ImagesList("Golden Horizon", ["assets/images/filler_images/Landscape.png"]),
+    ImagesList(
+        "Ethereal Dreamscape", ["assets/images/filler_images/Fantasy.png"]),
+    ImagesList(
+        "Harmony in Chaos", ["assets/images/filler_images/Surrealism.png"]),
+    ImagesList("Reflections of Solitude",
+        ["assets/images/filler_images/Portraiture.png"]),
   ];
 
   @override
@@ -39,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Auto-scroll logic for banners
     Timer.periodic(const Duration(seconds: 7), (Timer timer) {
       if (_pageController.hasClients) {
-        _currentPage++;
+        _currentPage = (_currentPage + 1) % _totalBanners;
         _pageController.animateToPage(
           _currentPage,
           duration: const Duration(milliseconds: 1500),
@@ -108,45 +115,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 // Auto-scrolling Trending Banners
                 SizedBox(
-                  height: 120,
-                  child: PageView.builder(
-                    controller: _pageController,
-                    onPageChanged: (index) {
-                      // Handle infinite scroll
-                      if (index == _totalBanners) {
-                        Future.delayed(
-                          const Duration(milliseconds: 300),
-                          () {
-                            _pageController.jumpToPage(0);
-                          },
+                    height: 120,
+                    child: PageView.builder(
+                      controller: _pageController,
+                      allowImplicitScrolling: true, // This helps preserve state
+                      itemBuilder: (context, index) {
+                        return TrendingBanner(
+                          title: [
+                            "Browse Trending Artists",
+                            "Discover New Artworks",
+                            "Popular Digital Artists"
+                          ][index % _totalBanners],
+                          imagePath: [
+                            "assets/images/banner_images/banner1.jpg",
+                            "assets/images/banner_images/banner2.jpg",
+                            "assets/images/banner_images/banner3.jpg"
+                          ][index % _totalBanners],
                         );
-                      }
-                      setState(() {
-                        _currentPage = index % _totalBanners;
-                      });
-                    },
-                    itemCount: _totalBanners + 1, // Extra item for looping
-                    itemBuilder: (context, index) {
-                      final isLast = index == _totalBanners;
-                      return TrendingBanner(
-                        title: isLast
-                            ? "Browse Trending Artists" // Title of the first banner
-                            : [
-                                "Browse Trending Artists",
-                                "Discover New Artworks",
-                                "Popular Digital Artists"
-                              ][index],
-                        imagePath: isLast
-                            ? "assets/images/banner_images/banner1.jpg" // Image path of the first banner
-                            : [
-                                "assets/images/banner_images/banner1.jpg",
-                                "assets/images/banner_images/banner2.jpg",
-                                "assets/images/banner_images/banner3.jpg"
-                              ][index],
-                      );
-                    },
-                  ),
-                ),
+                      },
+                    )),
                 const SizedBox(height: 16),
 
                 // Fetching Artwork Data from Firebase

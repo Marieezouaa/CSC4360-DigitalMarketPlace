@@ -95,37 +95,27 @@ Future<void> signUpWithGoogle() async {
   }
 }
 
-// Helper method to initialize new user data
 Future<void> _initializeNewUser(User? user) async {
   if (user != null) {
-    // Add user to Firestore or perform other initializations
-    // Example: Adding user data to Firestore
-   
     await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-      'email': user.email,
-      'displayName': user.displayName,
-      'createdAt': Timestamp.now(),
+      'bio': '', // Default empty string
+      'country': '', // Default empty string
+      'email': user.email ?? '',
+      'firstName': firstNameController.text.trim(),
+      'lastName': lastNameController.text.trim(),
+      'phoneNumber': '', // Default empty string
+      'portfolio': [], // Empty array
+      'purchaseHistory': [], // Empty array
+      'role': 'user', // Default role
+      'userId': user.uid,
+      'userName': '${firstNameController.text.trim()} ${lastNameController.text.trim()}',
     });
-
-
   }
 }
 
-
-  @override
-  void dispose() {
-    firstNameController.dispose();
-    lastNameController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
-    super.dispose();
-  }
-
-  Future<void> signUp() async {
+Future<void> signUp() async {
   // Ensure passwords match
-  if (passwordController.text.trim() !=
-      confirmPasswordController.text.trim()) {
+  if (passwordController.text.trim() != confirmPasswordController.text.trim()) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Passwords do not match")),
     );
@@ -140,22 +130,15 @@ Future<void> _initializeNewUser(User? user) async {
       password: passwordController.text.trim(),
     );
 
-    // Save additional user data to Firestore
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userCredential.user!.uid)
-        .set({
-      'firstName': firstNameController.text.trim(),
-      'lastName': lastNameController.text.trim(),
-      'email': emailController.text.trim(),
-    });
+    // Initialize new user data
+    await _initializeNewUser(userCredential.user);
 
     // Display success message
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Account created successfully!")),
     );
 
-    // Navigate to the SetupScreen instead of HomeScreen
+    // Navigate to the SetupScreen
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -184,6 +167,19 @@ Future<void> _initializeNewUser(User? user) async {
 
 
   @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+
+
+
+  @override
   Widget build(BuildContext context) {
     final Color primaryColor = Theme.of(context).colorScheme.primary;
     final Color onPrimaryColor = Theme.of(context).colorScheme.onPrimary;
@@ -197,6 +193,16 @@ Future<void> _initializeNewUser(User? user) async {
       backgroundColor: surfaceColor,
       body: Align(
         child: Container(
+           decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromARGB(255, 251, 243, 230),
+              Color.fromARGB(255, 181, 87, 145),
+            ],
+          ),
+        ),
           padding: const EdgeInsets.all(20),
           child: Padding(
             padding: const EdgeInsets.only(top: 150),
@@ -307,18 +313,18 @@ Future<void> _initializeNewUser(User? user) async {
                     children: [
                       //code by marieezouaa
                       const Expanded(
-                        child: Divider(color: Colors.grey, thickness: 1),
+                        child: Divider(color: Color.fromARGB(255, 48, 48, 48), thickness: 1),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15.0),
                         child: Text(
                           'Or Sign Up with',
                         style: GoogleFonts.spicyRice(
-                              color: Color.fromARGB(255, 137, 136, 136)),
+                              color: Color.fromARGB(255, 48, 48, 48),),
                         ),
                       ),
                       const Expanded(
-                        child: Divider(color: Colors.grey, thickness: 1),
+                        child: Divider(color: Color.fromARGB(255, 48, 48, 48), thickness: 1),
                       ),
                     ],
                   ),

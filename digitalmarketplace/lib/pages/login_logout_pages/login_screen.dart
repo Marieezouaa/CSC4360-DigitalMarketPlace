@@ -77,15 +77,14 @@ class _LoginScreenState extends State<LoginScreen> {
     final Color tertiaryColor = Theme.of(context).colorScheme.tertiary;
 
     return Scaffold(
-      backgroundColor: surfaceColor,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              surfaceColor,
-              tertiaryColor,
+              Color.fromARGB(255, 251, 243, 230),
+              Color.fromARGB(255, 181, 87, 145),
             ],
           ),
         ),

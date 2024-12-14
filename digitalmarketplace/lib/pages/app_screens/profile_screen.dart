@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digitalmarketplace/models/settings_containers.dart';
 import 'package:digitalmarketplace/pages/app_screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +17,45 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final user = FirebaseAuth.instance.currentUser;
+  String userName = "";
+  String phoneNumber = "Add Number +";
+  String address = "Add Address +";
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    if (user != null) {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .get();
+      if (doc.exists) {
+        final data = doc.data()!;
+        setState(() {
+          userName = data['userName'] ?? "";
+          phoneNumber = data['phoneNumber']?.isNotEmpty == true
+              ? data['phoneNumber']
+              : "Add Number +";
+          address = data['address']?.isNotEmpty == true
+              ? data['address']
+              : "Add Address +";
+        });
+      }
+    }
+  }
+
+  void navigateToEditScreen(String field) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditFieldScreen(field: field),
+      ),
+    ).then((_) => fetchUserData());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +66,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final Color errorColor = Theme.of(context).colorScheme.error;
 
     return Scaffold(
-      backgroundColor: surfaceColor,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top: 60.0, bottom: 8, left: 8, right: 8),
+          padding:
+              const EdgeInsets.only(top: 50.0, bottom: 0, left: 8, right: 8),
           child: Align(
             alignment: Alignment.center,
             child: Column(
@@ -44,7 +85,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100),
                         image: const DecorationImage(
-                            image: AssetImage("assets/images/profile/profile_pic.png"))),
+                            image: AssetImage(
+                                "assets/images/profile/profile_pic.png"))),
                   ),
                 ),
                 const SizedBox(
@@ -52,13 +94,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
-                      top: 8, bottom: 25, left: 10, right: 10),
+                      top: 8, bottom:10, left: 10, right: 10),
                   child: Container(
                     width: 385,
                     height: 140,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      color: secondaryColor,
+                      color: const Color.fromARGB(255, 190, 169, 227),
                     ),
                     child: Column(
                       children: [
@@ -68,11 +110,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             padding: const EdgeInsets.only(
                                 top: 8, bottom: 4, left: 10, right: 8),
                             child: Text(
-                              "User's Name",
+                              userName.isNotEmpty ? userName : "Loading...",
                               style: GoogleFonts.gabarito(
                                   fontSize: 17.5,
                                   fontWeight: FontWeight.w500,
-                                  color: onSecondaryColor),
+                                  color: Colors.black),
                             ),
                           ),
                         ),
@@ -83,16 +125,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               Align(
                                 alignment: Alignment.topLeft,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 4, bottom: 8, left: 10, right: 8),
-                                  child: Text(
-                                    "The user's address",
-                                    style: GoogleFonts.montserrat(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w500,
-                                        color: const Color.fromARGB(
-                                            255, 149, 149, 149)),
+                                child: GestureDetector(
+                                  onTap: () => navigateToEditScreen("address"),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 4, bottom: 8, left: 10, right: 8),
+                                    child: Text(
+                                      address,
+                                      style: GoogleFonts.montserrat(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -113,15 +157,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         Align(
                           alignment: Alignment.topLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 4, bottom: 8, left: 10, right: 8),
-                            child: Text(
-                              "123-456-7890",
-                              style: GoogleFonts.montserrat(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w500,
-                                  color: const Color.fromARGB(255, 149, 149, 149)),
+                          child: GestureDetector(
+                            onTap: () => navigateToEditScreen("phoneNumber"),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 4, bottom: 8, left: 10, right: 8),
+                              child: Text(
+                                phoneNumber,
+                                style: GoogleFonts.montserrat(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black),
+                              ),
                             ),
                           ),
                         )
@@ -129,23 +176,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-                const SettingsContainers(
-                  navigateTo: HomeScreen(),
-                  sectionTitle: "Address",
+
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 7.0),
+                  child: Container(
+                    height: 350,
+                    child: const SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        children: [
+                          SettingsContainers(
+                            navigateTo: HomeScreen(),
+                            sectionTitle: "Orders",
+                          ),
+                          SettingsContainers(
+                            navigateTo: HomeScreen(),
+                            sectionTitle: "Favorites",
+                          ),
+                          SettingsContainers(
+                            navigateTo: HomeScreen(),
+                            sectionTitle: "Wishlist",
+                          ),
+                          SettingsContainers(
+                            navigateTo: HomeScreen(),
+                            sectionTitle: "Wallet",
+                          ),
+                          SettingsContainers(
+                            navigateTo: HomeScreen(),
+                            sectionTitle: "Help",
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                const SettingsContainers(
-                  navigateTo: HomeScreen(),
-                  sectionTitle: "Wishlist",
-                ),
-                const SettingsContainers(
-                  navigateTo: HomeScreen(),
-                  sectionTitle: "Payment",
-                ),
-                const SettingsContainers(
-                  navigateTo: HomeScreen(),
-                  sectionTitle: "Help",
-                ),
-                const SizedBox(height: 20), // Added SizedBox for spacing
+
+                const SizedBox(height: 12), // Added SizedBox for spacing
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
@@ -187,5 +253,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+}
+
+class EditFieldScreen extends StatelessWidget {
+  final String field;
+
+  const EditFieldScreen({super.key, required this.field});
+
+  @override
+  Widget build(BuildContext context) {
+    final TextEditingController controller = TextEditingController();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Edit ${field.capitalize()}"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: controller,
+              decoration: InputDecoration(
+                labelText: "Enter your ${field.capitalize()}",
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                final user = FirebaseAuth.instance.currentUser;
+                if (user != null) {
+                  await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(user.uid)
+                      .update({field: controller.text.trim()});
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text("Save"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+extension StringExtension on String {
+  String capitalize() {
+    return '${this[0].toUpperCase()}${substring(1)}';
   }
 }
