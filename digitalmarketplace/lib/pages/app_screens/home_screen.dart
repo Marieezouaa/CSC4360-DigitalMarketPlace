@@ -1,5 +1,6 @@
 import 'package:digitalmarketplace/models/product_card.dart';
 import 'package:digitalmarketplace/models/trending_banner.dart';
+import 'package:digitalmarketplace/pages/app_screens/cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -106,7 +107,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         onPressed: () {
-                          // Navigate to cart
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      CartScreen(),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero,
+                            ),
+                          );
                         },
                       ),
                     ],
