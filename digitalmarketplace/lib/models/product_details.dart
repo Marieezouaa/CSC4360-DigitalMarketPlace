@@ -1,6 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 
+// Global cart state
+class CartState {
+  static List<Map<String, dynamic>> items = [];
+  static List<Map<String, dynamic>> wishlist = [];
+
+  /// Adds an item to the cart
+  static void addItem(Map<String, dynamic> item) {
+    double price = item['price'] is int
+        ? (item['price'] as int).toDouble()
+        : item['price'] as double;
+
+    // Check if the item already exists in the cart
+    for (var cartItem in items) {
+      if (cartItem['title'] == item['title']) {
+        cartItem['count'] += item['count'];
+        return;
+      }
+    }
+
+    // Create a new item with values
+    Map<String, dynamic> safeCartItem = {
+      'title': item['title'],
+      'price': price,
+      'count': item['count'],
+      'size': item['size'] ?? 'Medium',
+      'color': item['color'] ?? 'Default',
+    };
+
+    items.add(safeCartItem);
+  }
+
+  /// Moves an item from cart to wishlist
+  static void addToWishlist(Map<String, dynamic> item) {
+    wishlist.add(item);
+    items.removeWhere((cartItem) => cartItem['title'] == item['title']);
+  }
+
+  /// Moves an item from wishlist back to cart (checks for duplicates)
+  static void addToCart(Map<String, dynamic> item) {
+    for (var cartItem in items) {
+      if (cartItem['title'] == item['title']) {
+        cartItem['count'] += item['count'];
+        wishlist.removeWhere((wishItem) => wishItem['title'] == item['title']);
+        return;
+      }
+    }
+
+    items.add(item);
+    wishlist.removeWhere((wishItem) => wishItem['title'] == item['title']);
+  }
+}
+
 // ProductDetails widget
 class ProductDetails extends StatefulWidget {
   final Map<String, dynamic> artwork;
@@ -13,10 +65,19 @@ class ProductDetails extends StatefulWidget {
 
 class _ProductDetailsState extends State<ProductDetails> {
   int itemCount = 1; // Default quantity
-  bool isFavorite = false; // State to track favorite status
+  bool isFavorite = false;
+  Color buttonColor = const Color.fromARGB(255, 152, 151, 176);
 
   @override
   Widget build(BuildContext context) {
+
+    double price = (widget.artwork['price'] is int)
+        ? widget.artwork['price'].toDouble()
+        : widget.artwork['price'];
+
+    // Calculate total price based on quantity
+    double totalPrice = price * itemCount;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -61,6 +122,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   _getAssetImageForArtwork(widget.artwork['category']),
                   fit: BoxFit.cover,
                   width: double.infinity,
+                  height: 400,
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -143,13 +205,25 @@ class _ProductDetailsState extends State<ProductDetails> {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: GestureDetector(
-                onTap: addToCart,
+                onTap: () {
+                  setState(() {
+                    // Change color on tap
+                    buttonColor = buttonColor.withOpacity(0.7);
+                  });
+                  addToCart();
+                  // Reset button color after a short delay
+                  Future.delayed(const Duration(milliseconds: 200), () {
+                    setState(() {
+                      buttonColor = const Color.fromARGB(255, 152, 151, 176);
+                    });
+                  });
+                },
                 child: Container(
                   width: 380,
                   height: 55,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50),
-                    color: const Color.fromARGB(255, 152, 151, 176),
+                    color: buttonColor, // Use the updated color
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -157,7 +231,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "\$${widget.artwork['price'].toStringAsFixed(2)}",
+                          "\$${totalPrice.toStringAsFixed(2)}",
                           style: const TextStyle(fontSize: 16),
                         ),
                         const Text(
@@ -196,5 +270,24 @@ class _ProductDetailsState extends State<ProductDetails> {
   }
 
   void addToCart() {
+    // Create a cart item with the current artwork details and quantity
+    Map<String, dynamic> cartItem = {
+      'title': widget.artwork['title'],
+      'price': widget.artwork['price'],
+      'count': itemCount,
+      'size': 'Medium',
+      'color': 'Default', 
+    };
+
+    // Add the item to the global cart state
+    CartState.addItem(cartItem);
+
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${widget.artwork['title']} added to cart'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 }

@@ -20,10 +20,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
   bool onThirdPage = false;
   final PageController _controller = PageController();
 
-  /// Method to mark onboarding as complete
+
   Future<void> _completeOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('hasSeenOnboarding', true); // Save "seen" flag
+    await prefs.setBool('hasSeenOnboarding', true); 
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const LoginScreen()),

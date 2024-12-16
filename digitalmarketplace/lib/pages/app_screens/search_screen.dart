@@ -77,7 +77,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               title: Text(result['title']),
                               subtitle: Text(result['subtitle']),
                               onTap: () {
-                                // Handle navigation or interaction with the result
+
                               },
                             );
                           },
@@ -94,20 +94,20 @@ class _SearchScreenState extends State<SearchScreen> {
 
 
 Future<List<Map<String, String>>> _performSearch(String query) async {
-  // Reference to the Firestore instance
+
   final firestore = FirebaseFirestore.instance;
 
-  // Normalize query for case-insensitive searching
+
   final searchQuery = query.toLowerCase();
 
-  // Initialize an empty list to store search results
+
   List<Map<String, String>> results = [];
 
   try {
-    // Fetch artworks that match the query in title or description
+
     final artworkSnapshot = await firestore
         .collection('artworks')
-        .where('isAvailable', isEqualTo: true) // Only available artworks
+        .where('isAvailable', isEqualTo: true) 
         .get();
 
     for (var doc in artworkSnapshot.docs) {
@@ -117,24 +117,24 @@ Future<List<Map<String, String>>> _performSearch(String query) async {
         results.add({
           'imageUrl': data['imageUrl'] ?? '',
           'title': data['title'] ?? 'Untitled',
-          'subtitle': 'Artwork by ${data['artistId'] ?? 'Unknown Artist'}',
+          'subtitle': 'Artwork by ${data['artistName'] ?? 'Unknown Artist'}',
         });
       }
     }
 
-    // Fetch artists that match the query in userName or bio
+
     final artistSnapshot = await firestore
         .collection('user')
-        .where('role', isEqualTo: 'artist') // Only artists
+        .where('role', isEqualTo: 'artist')
         .get();
 
     for (var doc in artistSnapshot.docs) {
       final data = doc.data();
-      if (data['userName'].toString().toLowerCase().contains(searchQuery) ||
+      if (data['artistName'].toString().toLowerCase().contains(searchQuery) ||
           data['bio'].toString().toLowerCase().contains(searchQuery)) {
         results.add({
-          'imageUrl': '', // Placeholder or artist's profile image URL
-          'title': data['userName'] ?? 'Unknown Artist',
+          'imageUrl': '', 
+          'title': data['artistName'] ?? 'Unknown Artist',
           'subtitle': data['bio'] ?? '',
         });
       }
@@ -144,7 +144,7 @@ Future<List<Map<String, String>>> _performSearch(String query) async {
     rethrow;
   }
 
-  // Return the collected results
+  
   return results;
 }
 

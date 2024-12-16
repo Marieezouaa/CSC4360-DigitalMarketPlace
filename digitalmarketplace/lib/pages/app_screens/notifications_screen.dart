@@ -110,7 +110,7 @@ class NotificationsTab extends StatelessWidget {
     );
   }
 }
-// Update the MessagesTab in the previous NotificationsScreen to navigate to ChatScreen
+
 class MessagesTab extends StatelessWidget {
   const MessagesTab({super.key});
 

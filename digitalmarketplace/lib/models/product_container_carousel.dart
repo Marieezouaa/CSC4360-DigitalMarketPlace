@@ -18,18 +18,18 @@ class _ProductContainerCarouselState extends State<ProductContainerCarousel> {
   late final CollectionReference _firebaseCollection =
       FirebaseFirestore.instance.collection(widget.collection);
 
-  // Enhanced method to fetch image paths for a product
+
   List<String> _getImagePathsForProduct(String productTitle) {
-    // Trim and convert to lowercase for more flexible matching
+
     final normalizedTitle = productTitle.trim().toLowerCase();
 
-    // Find the first matching ImagesList where the product name matches (case-insensitive)
+
     final matchedItem = images.firstWhere(
       (item) => item.productName.trim().toLowerCase() == normalizedTitle,
-      orElse: () => const ImagesList('', []), // Return empty ImagesList if no match
+      orElse: () => const ImagesList('', []), 
     );
 
-    return matchedItem.images; // Return all images related to the product
+    return matchedItem.images; 
   }
 
   @override

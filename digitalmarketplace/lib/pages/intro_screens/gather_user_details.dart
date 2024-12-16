@@ -18,13 +18,13 @@ class _GatherUserDetailsState extends State<GatherUserDetails> {
   String _phoneNumber = '';
   List<String> _portfolio = [];
   String _role = 'Not Sure Yet';
-  String _countryCode = '+1'; // Default country code (can be changed to another default)
+  String _countryCode = '+1'; 
 
-  // Function to save user details to Firestore
+
   Future<void> _saveUserDetails() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      // Handle the case when the user is not authenticated (show error message or redirect to login)
+
       print("User is not logged in");
       return;
     }
@@ -36,10 +36,10 @@ class _GatherUserDetailsState extends State<GatherUserDetails> {
       'phoneNumber': _phoneNumber,
       'portfolio': _portfolio,
       'role': _role,
-      'countryCode': _countryCode, // Save country code
+      'countryCode': _countryCode, 
     });
 
-    // Optionally, navigate to the next screen after saving the details
+
     Navigator.pushReplacementNamed(context, '/home');
   }
 
@@ -47,7 +47,7 @@ class _GatherUserDetailsState extends State<GatherUserDetails> {
   void _selectCountry(BuildContext context) {
     showCountryPicker(
       context: context,
-      showPhoneCode: true, // Show phone code
+      showPhoneCode: true, 
       onSelect: (Country country) {
         setState(() {
           _countryCode = country.phoneCode;
@@ -88,29 +88,29 @@ class _GatherUserDetailsState extends State<GatherUserDetails> {
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: SingleChildScrollView(
-                child: Form(  // Wrap the entire form in the Form widget
-                  key: _formKey,  // Reference the form key
+                child: Form(  
+                  key: _formKey, 
                   child: Column(
                     children: [
-                      // Title
+
                       Text(
                         "Personal Details",
                         style: GoogleFonts.spicyRice(fontSize: 24),
                       ),
                       const SizedBox(height: 20),
 
-                      // User Name
+
                       _buildTextFormField('User Name', (value) => _userName = value ?? '', 'Please enter your username'),
 
-                      // Bio
+
                       _buildTextFormField('Bio', (value) => _bio = value ?? '', 'Please enter your bio'),
 
-                      // Phone Number with Country Picker
+
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: Row(
                           children: [
-                            // Country Code Button
+
                             ElevatedButton(
                               onPressed: () => _selectCountry(context),
                               child: Text(
@@ -126,7 +126,7 @@ class _GatherUserDetailsState extends State<GatherUserDetails> {
                             ),
                             const SizedBox(width: 10),
 
-                            // Phone Number Field
+
                             Expanded(
                               child: TextFormField(
                                 decoration: InputDecoration(
@@ -149,7 +149,6 @@ class _GatherUserDetailsState extends State<GatherUserDetails> {
                         ),
                       ),
 
-                      // Portfolio URLs
                       _buildTextFormField('Portfolio URL', (value) {
                         if (value != null && value.isNotEmpty) {
                           _portfolio.add(value);
@@ -158,7 +157,7 @@ class _GatherUserDetailsState extends State<GatherUserDetails> {
 
                       const SizedBox(height: 20),
 
-                      // Role Dropdown
+
                       DropdownButtonFormField<String>(
                         value: _role,
                         items: ['Buyer', 'Seller', 'Both', 'Not Sure Yet']
@@ -178,11 +177,12 @@ class _GatherUserDetailsState extends State<GatherUserDetails> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
+                          suffixIcon: Icon(Icons.arrow_drop_down),
                         ),
                       ),
                       const SizedBox(height: 20),
 
-                      // Save Button
+
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState?.validate() ?? false) {

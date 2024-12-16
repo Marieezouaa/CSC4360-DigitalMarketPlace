@@ -1,21 +1,38 @@
 import 'package:digitalmarketplace/pages/intro_screens/setup_screen.dart';
 import 'package:digitalmarketplace/pages/intro_screens/gather_user_details.dart';
 import 'package:digitalmarketplace/pages/onboarding_pages/onboarding_page.dart';
+import 'package:digitalmarketplace/pages/settings_screens/favorites_provider.dart';
 import 'package:digitalmarketplace/util/nav_bar.dart'; // Import the NavBar
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:digitalmarketplace/styles/color_themes.dart';
 import 'package:digitalmarketplace/pages/login_logout_pages/login_screen.dart';
 import 'package:digitalmarketplace/pages/login_logout_pages/create_account.dart';
-import 'package:digitalmarketplace/pages/app_screens/home_screen.dart'; // Your HomeScreen
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // Initialize Firebase
-  runApp(MyApp());
+
+
+
+
+
+
+void main()async {
+    WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); 
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => FavoritesProvider(),
+        ),
+        // Add other providers if needed
+      ],
+      child: MyApp(), // Your main app widget
+    ),
+  );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -23,6 +40,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -34,6 +52,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginScreen(),
         '/setup': (context) => const SetupScreen(),
         '/createAccount': (context) => const CreateAccount(),
+        '/gatherUserDetails': (context) => const GatherUserDetails(), // Add this route
       },
     );
   }
@@ -81,6 +100,11 @@ class StartupScreen extends StatelessWidget {
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({Key? key}) : super(key: key);
 
+  Future<bool> _isSetupComplete() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isSetupComplete') ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
@@ -98,8 +122,30 @@ class AuthWrapper extends StatelessWidget {
           );
         } else if (snapshot.hasData) {
           // User is authenticated
-          // Return the HomeScreen that includes NavBar
-          return const HomeScreen();
+          // Check if the user has completed setup
+          return FutureBuilder<bool>(
+            future: _isSetupComplete(),
+            builder: (context, setupSnapshot) {
+              if (setupSnapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (setupSnapshot.hasError) {
+                return const Scaffold(
+                  body: Center(child: Text('Error loading setup status.')),
+                );
+              }
+
+              bool isSetupComplete = setupSnapshot.data ?? false;
+              if (isSetupComplete) {
+                // Setup is complete, navigate to the HomeScreen
+                return const HomeScreen();
+              } else {
+                // Setup is not complete, navigate to the GatherUserDetails screen
+                return const GatherUserDetails();
+              }
+            },
+          );
         } else {
           // User is not authenticated
           return const LoginScreen();
@@ -109,7 +155,7 @@ class AuthWrapper extends StatelessWidget {
   }
 }
 
-/// HomeScreen with NavBar (Custom Navigation)
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 

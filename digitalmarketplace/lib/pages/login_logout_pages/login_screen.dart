@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
       checkUserSetup(context);
     } catch (e) {
       print("Error during email sign-in: $e");
-      // Handle error, e.g., show a message
+
     }
   }
 
@@ -177,22 +177,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Expanded(
-                          child: Divider(color: Colors.grey, thickness: 1),
+                          child: Divider(color: Color.fromARGB(255, 52, 52, 52), thickness: 1),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15.0),
                           child: Text(
                             'Or Log In with',
                             style: GoogleFonts.spicyRice(
-                                color: Color.fromARGB(255, 137, 136, 136)),
+                                color: Color.fromARGB(255, 52, 52, 52)),
                           ),
                         ),
                         const Expanded(
-                          child: Divider(color: Colors.grey, thickness: 1),
+                          child: Divider(color: Color.fromARGB(255, 52, 52, 52),)
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 85,
                     ),
                     ElevatedButton(

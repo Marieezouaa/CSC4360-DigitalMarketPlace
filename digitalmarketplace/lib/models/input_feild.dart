@@ -21,16 +21,16 @@ class InputFeild extends StatelessWidget {
       controller: controller,
       obscureText: makeTextInvisible,
       decoration: InputDecoration(
-        filled: true, // Fills the background with a color
-        fillColor: Color.fromARGB(255, 244, 244, 244), // Light grey background color
+        filled: true,
+        fillColor: Color.fromARGB(255, 244, 244, 244),
         hintText: hintTextString,
         hintStyle: GoogleFonts.spicyRice(
           color: Colors.black,
           fontSize: 16,
         ),
         border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5)), // Rounded corners
-          borderSide: BorderSide.none, // No visible border line
+          borderRadius: BorderRadius.all(Radius.circular(5)),
+          borderSide: BorderSide.none, 
         ),
       ),
     );

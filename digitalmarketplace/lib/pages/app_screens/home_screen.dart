@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentPage = 0;
   final int _totalBanners = 3;
 
-  // Dummy image list for demonstration purposes
+  // Dummy image list for demo purposes
   final List<ImagesList> images = [
     ImagesList(
         "Whispers of the Forest", ["assets/images/filler_images/Nature.png"]),
@@ -93,9 +93,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         icon: ShaderMask(
                           shaderCallback: (bounds) => const LinearGradient(
                             colors: [
-                              Color(0xFF614CAF), // Start color
-                              Color(0xFF9D6CFF), // Middle color
-                              Color(0xFFFFA726), // End color
+                              Color(0xFF614CAF),
+                              Color(0xFF9D6CFF), 
+                              Color(0xFFFFA726), 
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 120,
                     child: PageView.builder(
                       controller: _pageController,
-                      allowImplicitScrolling: true, // This helps preserve state
+                      allowImplicitScrolling: true, 
                       itemBuilder: (context, index) {
                         return TrendingBanner(
                           title: [
@@ -170,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           crossAxisCount: 2,
                           crossAxisSpacing: 16,
                           mainAxisSpacing: 16,
-                          childAspectRatio: 0.8, // Adjust for card height
+                          childAspectRatio: 0.8, 
                         ),
                         itemCount: artworks.length,
                         itemBuilder: (context, index) {
@@ -182,7 +182,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           return ProductCard(
                             artwork: {
-                              'artworkId': artwork['artworkId'],
+                              'artworkId': artwork[
+                                  'artworkId'], 
                               'title': artwork['title'],
                               'price': artwork['price'],
                               'category': artwork['category'],

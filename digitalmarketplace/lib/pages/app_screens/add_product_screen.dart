@@ -135,10 +135,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
     }
 
     try {
-      // Simulate product upload process
+
       await Future.delayed(const Duration(seconds: 2)); // Simulate network delay
 
-      // Create a mock product object (you can expand this as needed)
+      // Create a mock product object
       final mockProduct = {
         'title': _titleController.text,
         'description': _descriptionController.text,
@@ -149,7 +149,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         'uploadTimestamp': DateTime.now().toIso8601String()
       };
 
-      // Print mock product details (in a real app, you might save to local storage or send to a backend)
+
       print('Mock Product Created: $mockProduct');
 
       // Clear the form and show success message
@@ -214,12 +214,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
               ),
               const SizedBox(height: 15),
 
-              // Display selected images in a row (Not in the "Add Image" container)
+              // Display selected images in a row
               if (_imageFiles.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: SizedBox(
-                    height: 60, // Fixed height for the image row
+                    height: 60,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: _imageFiles.length,
@@ -230,7 +230,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             borderRadius: BorderRadius.circular(8),
                             child: Image.file(
                               _imageFiles[index],
-                              width: 60, // Small square size
+                              width: 60, 
                               height: 60,
                               fit: BoxFit.cover,
                             ),
@@ -426,7 +426,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   @override
   void dispose() {
-    // Dispose of controllers to prevent memory leaks
+
     _descriptionController.dispose();
     _titleController.dispose();
     _tagController.dispose();

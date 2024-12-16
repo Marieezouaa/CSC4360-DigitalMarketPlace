@@ -74,7 +74,7 @@ class ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        elevation: 0, // Optional: removes the shadow under the AppBar
+        elevation: 0, 
         leading: GestureDetector(
           onTap: () {
             Navigator.pop(context); // Navigate back when pressed

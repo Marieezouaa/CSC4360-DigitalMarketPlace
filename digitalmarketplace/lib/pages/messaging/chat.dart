@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-// Chat Message Model
+
 class ChatMessage {
   final String sender;
   final String message;
@@ -49,7 +49,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    // Scroll to bottom when chat screen loads
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
     });
@@ -87,10 +87,10 @@ class _ChatScreenState extends State<ChatScreen> {
         padding: const EdgeInsets.only(top: 40, bottom: 5),
         child: Stack(
           children: [
-            // Main Content
+
             Column(
               children: [
-                SizedBox(height: padding.top + 60), // Reserve space for the custom app bar
+                SizedBox(height: padding.top + 60), 
                 Expanded(
                   child: ListView.builder(
                     controller: _scrollController,
@@ -104,7 +104,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 _buildMessageInput(),
               ],
             ),
-            // Custom App Bar
+
             Positioned(
               top: 0,
               left: 0,
@@ -122,7 +122,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     return Container(
       padding: EdgeInsets.only(
-        top: padding.top, // Adds spacing for the notch or cutout
+        top: padding.top,
         left: 16,
         right: 16,
       ),

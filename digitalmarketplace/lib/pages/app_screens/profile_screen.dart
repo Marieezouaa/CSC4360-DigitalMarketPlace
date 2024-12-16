@@ -1,6 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digitalmarketplace/models/settings_containers.dart';
 import 'package:digitalmarketplace/pages/app_screens/home_screen.dart';
+import 'package:digitalmarketplace/pages/settings_screens/favorites_screen.dart';
+import 'package:digitalmarketplace/pages/settings_screens/help.dart';
+import 'package:digitalmarketplace/pages/settings_screens/orders.dart';
+import 'package:digitalmarketplace/pages/settings_screens/wallet.dart';
+import 'package:digitalmarketplace/pages/settings_screens/wishlist_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -186,23 +191,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Column(
                         children: [
                           SettingsContainers(
-                            navigateTo: HomeScreen(),
+                            navigateTo: OrdersScreen(),
                             sectionTitle: "Orders",
                           ),
                           SettingsContainers(
-                            navigateTo: HomeScreen(),
+                            navigateTo: FavoritesScreen(),
                             sectionTitle: "Favorites",
                           ),
                           SettingsContainers(
-                            navigateTo: HomeScreen(),
+                            navigateTo: WishlistScreen(),
                             sectionTitle: "Wishlist",
                           ),
                           SettingsContainers(
-                            navigateTo: HomeScreen(),
+                            navigateTo: WalletScreen(),
                             sectionTitle: "Wallet",
                           ),
                           SettingsContainers(
-                            navigateTo: HomeScreen(),
+                            navigateTo: HelpScreen(),
                             sectionTitle: "Help",
                           ),
                         ],

@@ -1,5 +1,9 @@
+import 'package:digitalmarketplace/models/product_details.dart';
+import 'package:digitalmarketplace/pages/settings_screens/wishlist_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+// Make sure to import the CartState from ProductDetails
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -9,36 +13,55 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  // List of cart items (empty for this version)
-  List<Map<String, dynamic>> cartItems = [];
-
   @override
   Widget build(BuildContext context) {
-    double subtotal = cartItems.fold(0.0, (sum, item) => sum + (item['price'] * item['count']));
+  
+    List<Map<String, dynamic>> cartItems = CartState.items;
+
+    double subtotal = cartItems.fold(0.0, (sum, item) {
+
+      double price = item['price'] is int
+          ? (item['price'] as int).toDouble()
+          : item['price'];
+      int count = item['count'] is double
+          ? (item['count'] as double).toInt()
+          : item['count'];
+      return sum + (price * count);
+    });
     double tax = 5.0;
     double total = subtotal + tax;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Cart",
-          style: GoogleFonts.spicyRice(),
-        ),
-        centerTitle: true,
-        actions: [
-          TextButton(
-            onPressed: () {
-              setState(() {
-                cartItems.clear(); // Remove all items from the cart
-              });
-            },
-            child: Text(
-              "Remove All",
-              style: GoogleFonts.spicyRice(color: Colors.white),
-            ),
-          )
-        ],
+  title: Text(
+    "Cart",
+    style: GoogleFonts.spicyRice(),
+  ),
+  centerTitle: true,
+  actions: [
+    IconButton(
+      icon: const Icon(Icons.favorite_border), 
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const WishlistScreen()),
+        );
+      },
+    ),
+    TextButton(
+      onPressed: () {
+        setState(() {
+          CartState.items.clear(); 
+        });
+      },
+      child: Text(
+        "Remove All",
+        style: GoogleFonts.spicyRice(color: Colors.white),
       ),
+    )
+  ],
+),
+
       body: cartItems.isEmpty
           ? Center(
               child: Text(
@@ -55,14 +78,36 @@ class _CartScreenState extends State<CartScreen> {
                       itemCount: cartItems.length,
                       itemBuilder: (context, index) {
                         final item = cartItems[index];
-                        return cartItem(
-                          item['title'],
-                          item['size'],
-                          item['color'],
-                          item['price'],
-                          item['count'],
-                          () => setState(() => item['count']++),
-                          () => setState(() => item['count'] = item['count'] > 1 ? item['count'] - 1 : 1),
+                        return Dismissible(
+                          key: ValueKey(item['title']),
+                          direction: DismissDirection.endToStart, 
+                          background: Container(
+                            color: Colors.blueAccent,
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: const Icon(Icons.favorite,
+                                color: Colors.white, size: 30),
+                          ),
+                          onDismissed: (direction) {
+                            setState(() {
+                              CartState.addToWishlist(item);
+                            });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                      "${item['title']} moved to Wishlist")),
+                            );
+                          },
+                          child: cartItem(
+                            item['title'],
+                            item['size'] ?? 'Medium',
+                            item['color'] ?? 'Default',
+                            item['price'],
+                            item['count'],
+                            () => setState(() => item['count']++),
+                            () => setState(() => item['count'] =
+                                item['count'] > 1 ? item['count'] - 1 : 1),
+                          ),
                         );
                       },
                     ),
@@ -71,11 +116,12 @@ class _CartScreenState extends State<CartScreen> {
                   summaryRow("Subtotal", "\$${subtotal.toStringAsFixed(2)}"),
                   summaryRow("Shipping Cost", "Free"),
                   summaryRow("Tax", "\$${tax.toStringAsFixed(2)}"),
-                  summaryRow("Total", "\$${total.toStringAsFixed(2)}", isTotal: true),
+                  summaryRow("Total", "\$${total.toStringAsFixed(2)}",
+                      isTotal: true),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      // Add logic for checkout
+
                     },
                     child: Text(
                       "Checkout",
@@ -110,7 +156,7 @@ class _CartScreenState extends State<CartScreen> {
             color: Colors.grey[300],
             borderRadius: BorderRadius.circular(10),
           ),
-          child: const Icon(Icons.image, size: 50), // Replace with actual image
+          child: const Icon(Icons.image, size: 50), 
         ),
         const SizedBox(width: 10),
         Expanded(

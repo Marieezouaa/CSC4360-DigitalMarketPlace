@@ -16,15 +16,15 @@ class TrendingBanner extends StatefulWidget {
 }
 
 class _TrendingBannerState extends State<TrendingBanner> with AutomaticKeepAliveClientMixin {
-  // Add any state variables you want to persist here
+
   bool _isLiked = false;
   
   @override
-  bool get wantKeepAlive => true; // This ensures the widget's state is preserved
+  bool get wantKeepAlive => true; 
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // Required for AutomaticKeepAliveClientMixin
+    super.build(context);
     
     return Container(
       width: 400,
